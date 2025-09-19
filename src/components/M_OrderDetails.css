@@ -1,0 +1,89 @@
+/* 전체 컨테이너 */
+.m-book-container {
+  padding: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* 제목 */
+.m-order-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 주문 카드 박스 */
+.m-order-box {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+/* 주문번호 / 날짜 */
+.m-order-id,
+.m-order-date {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+/* 상품 목록 */
+.m-order-items {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.m-order-item {
+  font-size: 14px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #ddd;
+  color: #333;
+}
+
+.m-order-item:last-child {
+  border-bottom: none;
+}
+
+/* 총 금액 */
+.m-order-total {
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* QR 박스 */
+.m-qr-box {
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* 닫기 버튼 */
+.m-close-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.m-close-btn:hover {
+  background-color: #218838;
+}
+
+/* 로딩 */
+.m-loading {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 40px;
+  color: #555;
+}

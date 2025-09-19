@@ -1,0 +1,152 @@
+.m-book-container {
+  padding: 16px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.m-inquiry-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 16px 0 12px;
+  text-align: center;
+}
+
+.m-inquiry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m-inquiry-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.m-question-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.m-answer-text {
+  font-size: 14px;
+  color: #444;
+  white-space: pre-wrap;
+}
+
+.m-inquiry-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.m-inquiry-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+.m-check-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #28a745; /* ✅ 초록색 */
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.m-check-btn:hover {
+  background-color: #218838; /* 진한 초록으로 hover */
+}
+
+.m-inquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.m-inquiry-textarea {
+  padding: 10px;
+  font-size: 14px;
+  height: 100px;
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.m-inquiry-password {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.m-inquiry-submit {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.m-my-questions,
+.m-admin-inquiries {
+  margin-top: 30px;
+}
+
+.m-section-title {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+.m-no-questions {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.m-admin-textarea {
+  margin-top: 10px;
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: none;
+}
+
+.m-admin-submit {
+  margin-top: 8px;
+  background-color: #333;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}

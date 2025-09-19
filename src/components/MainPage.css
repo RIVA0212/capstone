@@ -1,0 +1,223 @@
+
+.main-page {
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(99, 102, 241, 0.25), transparent 60%),
+              radial-gradient(1000px 500px at 110% 10%, rgba(236, 72, 153, 0.18), transparent 60%),
+              #0f1115;
+  color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 헤더 */
+.main-header {
+  background: linear-gradient(135deg, rgba(34, 51, 102, 0.65), rgba(26, 31, 76, 0.65));
+  padding: 72px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.main-header:before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(500px 200px at 50% -10%, rgba(255, 255, 255, 0.08), transparent 60%);
+  pointer-events: none;
+}
+.main-title h1 {
+  font-size: 2.6rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.main-title p {
+  font-size: 1.1rem;
+  color: #cfd3dc;
+}
+
+/* 버튼 */
+.main-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 40px 0 28px;
+  flex-wrap: wrap;
+}
+.main-buttons button {
+  background: linear-gradient(180deg, rgba(34, 34, 38, 0.85), rgba(28, 28, 32, 0.85));
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px 20px;
+  min-width: 140px;
+  min-height: 150px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+}
+.main-buttons button:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(99, 102, 241, 0.35);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+.icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.label {
+  font-size: 0.95rem;
+  color: #c7cbd6;
+}
+
+/* 배너 */
+.main-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 36px;
+  flex-grow: 1;
+}
+
+.banner-wrapper {
+  position: relative;
+  width: 92vw;
+  max-width: 980px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #0a0b0e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+.banner-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.9s ease-in-out, transform 6s ease-out;
+  transform: scale(1.04);
+  z-index: 0;
+}
+
+.banner-img.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+}
+
+.banner-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(15, 17, 21, 0.55);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 26px;
+  padding: 8px 10px;
+  cursor: pointer;
+  z-index: 2;
+  border-radius: 12px;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+.banner-arrow:hover { 
+  background: rgba(15, 17, 21, 0.75);
+  transform: translateY(-50%) scale(1.05);
+}
+.banner-arrow.left { left: 12px; }
+.banner-arrow.right { right: 12px; }
+
+.banner-dots {
+  margin-top: 12px;
+  text-align: center;
+}
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #3a3e49, #2a2e38);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.25s ease;
+}
+.dot:hover { transform: scale(1.05); }
+.dot.active {
+  background: linear-gradient(180deg, #ffffff, #cfd3dc);
+}
+
+/* 푸터 */
+.main-footer-text {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #aeb4c2;
+  padding: 34px 0 40px;
+  line-height: 1.7;
+  margin-top: auto;
+}
+
+/* 반응형 전체 구조 추가 */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ 모바일 반응형 (768px 이하) */
+@media (max-width: 768px) {
+  .main-title h1 {
+    font-size: 1.8rem;
+  }
+
+  .main-title p {
+    font-size: 1rem;
+  }
+
+  .main-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 20px;
+    justify-items: center;
+  }
+
+  .main-buttons button {
+    width: 100%;
+    min-height: 110px;
+    font-size: 0.95rem;
+    padding: 16px 12px;
+  }
+
+  .icon {
+    font-size: 2.1rem;
+    margin-bottom: 6px;
+  }
+
+  .label {
+    font-size: 0.85rem;
+  }
+
+  .main-footer-text {
+    font-size: 0.85rem;
+    padding: 22px 10px 32px;
+    margin-top: 36px;
+  }
+}

@@ -1,0 +1,387 @@
+.mypage-sidebar {
+  width: 280px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 사용자 프로필 섹션 */
+.user-profile-section {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.user-avatar {
+  margin-bottom: 15px;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.user-info h3.username {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.user-role {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.user-role.admin {
+  background: #dc3545;
+  color: white;
+}
+
+.user-role.user {
+  background: #28a745;
+  color: white;
+}
+
+/* 섹션 공통 스타일 */
+.sidebar-section {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sidebar-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #495057;
+  margin: 0 0 15px 0;
+  padding-left: 8px;
+  border-left: 3px solid #667eea;
+}
+
+/* 계정 관리 버튼 */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-btn {
+  background: #007bff;
+  color: white;
+}
+
+.password-btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.logout-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* 빠른 이동 버튼 */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-action-btn {
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.quick-action-btn:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+.action-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.action-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 외부 링크 */
+.external-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.external-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.link-content {
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.external-link:hover .link-content {
+  background: #f8f9fa;
+  border-color: #667eea;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.link-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.link-info {
+  flex: 1;
+}
+
+.link-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.link-desc {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* 통계 정보 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px 8px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .mypage-sidebar {
+    width: 100%;
+    position: static;
+    margin-bottom: 20px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .action-buttons {
+    flex-direction: row;
+  }
+  
+  .action-btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+}
+
+/* 회원 탈퇴 버튼 스타일 */
+.withdraw-btn {
+  background: #dc3545;
+  color: white;
+  border: 1px solid #dc3545;
+}
+
+.withdraw-btn:hover {
+  background: #c82333;
+  border-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* 최근 주문내역 스타일 */
+.recent-orders {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.order-item:hover {
+  background: #f8f9fa;
+  border-color: #007bff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+}
+
+.order-item::after {
+  content: '→';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #007bff;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.order-item:hover::after {
+  opacity: 1;
+}
+
+.order-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.order-product {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-date {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.order-amount {
+  font-size: 12px;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.order-status {
+  font-size: 16px;
+  margin-left: 8px;
+  margin-right: 20px;
+}
+
+.loading-text {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
+.no-orders {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
+.view-all-orders-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.view-all-orders-btn:hover {
+  background: #0056b3;
+}

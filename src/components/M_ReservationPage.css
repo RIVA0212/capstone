@@ -1,0 +1,184 @@
+/* 전체 컨테이너 */
+.m-book-container {
+  padding: 16px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 모달 관련 */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.reservation-input {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.reservation-button {
+  flex: 1;
+  padding: 10px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #dc3545 !important;
+}
+
+/* 에러 메시지 */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* 예약 카드 */
+.m-order-list {}
+
+.m-no-orders {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 16px;
+  color: #555;
+}
+
+.m-order-card {
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  font-size: 14px;
+}
+
+.m-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.m-order-status {
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+.m-order-status.수령 {
+  background: #e0f3e0;
+  color: #1c7c1c;
+}
+.m-order-status.취소 {
+  background: #fce2e2;
+  color: #c62828;
+}
+.m-order-status.대기 {
+  background: #fff5e6;
+  color: #e09100;
+}
+
+.m-order-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.label {
+  color: #666;
+}
+.value {
+  font-weight: 600;
+  color: #111;
+}
+
+.m-detail-btn {
+  margin-top: 12px;
+  width: 100%;
+  background-color: #28a745 !important;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 15px;
+}
+
+/* 상세 보기 */
+.item-list {
+  list-style: disc;
+  text-align: left;
+  padding-left: 20px;
+  margin: 12px 0;
+}
+
+.receipt-status {
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.complete-receipt-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  width: 100%;
+  margin-top: 14px;
+  border: none;
+  font-size: 15px;
+}
+
+.qr-box {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.close-btn {
+  margin-top: 10px;
+  background-color: #28a745 !important;
+  color: black;
+  padding: 10px;
+  border-radius: 6px;
+  width: 100%;
+  border: none;
+  font-size: 15px;
+}

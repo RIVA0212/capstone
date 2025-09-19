@@ -1,0 +1,91 @@
+1. 로컬에서 ec2 생성 시 사용한 .pem 키페어를 사용하여 ec2 인스턴스에 npm run build 한 내용들을 업로드
+해야 하므로 ec2 인스턴스 생성 시 키페어 생성 및 .pem 키는 절대 분실하지 말 것(분실 시 그 ec2 인스턴스
+에 로컬로 접속 x)
+
+2. scp -i yourkey.pem -r build/* ec2-user@EC2퍼블릭IP주소:/var/www/html 명령어로 사용하고자 하는
+ec2 인스턴스에 프론트 페이지 업로드
+ㄴ ec2 인스턴스에서 ls /var/www/html 하면 정적페이지 파일들이 잘 올라갔나 확인 가능
+ㄴ yourkey.pem이 현재 폴더에 없는 경우 절대경로 기입 ex) C:\에 있다면 scp -i "C:\yourkey.pem" ~~
+
+3. ec2 인스턴스에 nodejs, certbot, nginx 모듈 설치
+  아마존 리눅스 2023 기준
+sudo dnf install nodejs -y
+sudo dnf install certbot python3-certbot -y
+sudo dnf install nginx -y
+
+4. 모듈 설치 후 nginx 프록시 설정 확인
+  sudo nano /etc/nginx/nginx.conf 입력 후 내용 작성(첫 생성 시엔 없는게 맞음)
+
+5. certbot으로 HTTPS 인증서 받기 전
+server {
+  listen 80;
+  server_name 프론트DNS;
+
+  location / {
+    root /usr/share/nginx/html;   # 임시 설정, 인증만 받기 위한 기본 응답
+    index index.html;
+  }
+}
+
+  위 내용을 /etc/nginx/nginx.conf에 저장
+    ㄴ nginx 프록시 설정 변경 후엔 반드시 sudo nginx -t로 문법 검사 후 Successfull 뜨면
+    ㄴ sudo systemctl reload nginx 로 변경 사항 저장하기(입력하면 아무것도 안뜸 그게 정상)
+    ㄴ 만약 reload가 안된다면 sudo systemctl start nginx 를 입력해보기 (nginx 실행)
+
+6. sudo certbot --nginx -d 프론트DNS(도메인)
+  처음 질문은 이메일에 알림 받을거냐 이메일 적어도 되고 귀찮으면 PASS~
+  두번째 질문은 Y (약관 동의)
+  세 번째 질문 3줄 정도 되는건 광고 받을거냐인데 N or 그냥 엔터
+  
+  Successfully received certificate. 라는 문구가 나오면 인증키 받은것
+
+7. nginx 프록시 설정
+server {
+    listen 80;
+    server_name 프론트 DNS;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name 프론트 DNS;
+
+    ssl_certificate /etc/letsencrypt/live/test-easyfind.p-e.kr/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/test-easyfind.p-e.kr/privkey.pem;
+
+    root /var/www/html;
+    index index.html;
+
+    location /static/ {
+        root /var/www/html;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+    **저장 전 확인해야 할 목록 server_name 옆 도메인 주소 꼭 확인
+  위와 같이 저장 후 종료
+
+------------------------------------자주 겪는 현상-------------------------------------
+
+Q. 화면이 안나와요
+-> F12 눌러서 개발자 도구 -> Console 오류창 지피티한테 물어보기
+근데 보통 ls /var/www/html에 정적 파일이 있으면 불러와지는데 '>' 뭐시기 하면서 토큰 오류 나는건
+js 파일을 ec2에서 못 읽는다는 소리니까
+sudo chmod -R 755 /var/www/html
+sudo chown -R nginx:nginx /var/www/html
+로 권한 설정하고 새로고침
+
+Q. 아래와 같은 오류가 떠요
+WARNING: UNPROTECTED PRIVATE KEY FILE!
+Permissions for 'yourkey.pem' are too open.
+...
+Permission denied (publickey).
+
+-> yourkey.pem 키 파일의 권한이 너무 열려 있음 (보안상 취약)
+iscacls 방법도 있는데 키 파일 우클릭 -> "속성" -> [보안] 탭 -> [고급] 버튼 -> 상속 사용 안함 or 중단
+-> 권한 목록에서 사용자 누르고 편집(이때 사용자는 보통 admin or user 그룹 제외 전부 제거해야함) 
+-> 읽기 권한만 남기고 저장
+
+*만약 위 방법이 안된다면 키 파일을 루트 디렉터리로 이동 ex) C:\, D:\

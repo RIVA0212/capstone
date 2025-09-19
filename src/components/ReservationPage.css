@@ -1,0 +1,321 @@
+.reservation-page {
+    background-color: #111;
+    color: #fff;
+    min-height: 100vh;
+  }
+ 
+  /* 전화번호 입력 모달 */
+  .phone-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+  
+  .phone-form {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .phone-form input {
+    padding: 0.6rem;
+    width: 150px;
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  .phone-form button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #0066cc;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 0.5rem;
+  }
+
+  /* 로딩 스타일 */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+
+  .loading {
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+  
+  /* 주문 카드 */
+  .orders-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+  
+  .order-card {
+    background-color: #222;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 400px;
+    cursor: pointer;
+  }
+  
+  .order-id {
+    font-size: 20px;
+    color: white;
+  }
+  
+  .order-amount span {
+    color: gold;
+    font-weight: bold;
+  }
+  
+  /* 상세 정보 모달 */
+  .order-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .order-popup {
+    background: #f4f4f4;
+    color: black;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 380px;
+    text-align: center;
+  }
+  
+  .order-popup .item-list {
+    text-align: left;
+    padding-left: 0;
+    margin-top: 1rem;
+    list-style-type: square;
+  }
+  
+  .order-popup .qr-box {
+    margin-top: 1rem;
+  }
+  
+  .order-popup button {
+    margin-top: 1.5rem;
+    background-color: #444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  /* 주문 카드 리스트 */
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 30px;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+.book-card {
+  background-color: #ffffff; /* 밝은 카드 배경 */
+  border-radius: 10px;
+  padding: 20px;
+  width: 240px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 더 진한 그림자 */
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #222;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.book-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #111;
+}
+
+.book-author,
+.book-publisher,
+.book-price {
+  display: block;         /* ✅ 줄바꿈 가능하게 함 */
+  white-space: normal;    /* ✅ 줄바꿈 허용 */
+  margin: 4px 0;          /* ✅ 간격도 추가 */
+}
+
+.add-to-cart-btn {
+  background-color: #0b65c6;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 8px;
+  margin-top: 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+
+/* 모달: 전화번호 입력, 상세정보 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  color: #222;
+  padding: 30px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.modal-content h3 {
+  margin-bottom: 12px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-content .modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-content button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #0b65c6;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 에러 메시지 */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* 상세정보 리스트 */
+.item-list {
+  margin: 15px 0;
+  padding-left: 20px;
+  font-size: 14px;
+  color: #444;
+}
+
+.qr-box {
+  margin-top: 15px;
+  text-align: center;
+}
+.receipt-status {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.receipt-status.done {
+  color: green;
+  font-weight: bold;
+}
+
+.receipt-status.waiting {
+  color: orange;
+}
+
+.complete-receipt-btn {
+  margin-top: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.complete-receipt-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #fc4b4b !important;
+}
+
+.cancel-btn:hover {
+  background-color: #c94242 !important;
+}
+
+.empty-orders-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+}
+
+.status-green {
+  color: green;
+}
+.status-orange {
+  color: orange;
+}
+.status-gray {
+  color: gray;
+}

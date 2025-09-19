@@ -1,0 +1,78 @@
+1. 깃 리포지토리 클론해서 내려받고 프론트 or 백엔드 유무에 맞춰서 npm install
+ㄴ 백엔드의 경우 package.json에 의존성이 누락된 경우니까 전부 설치해주자
+  아마존 리눅스 2023 기준 
+    sudo dnf install 모듈명 -y 하면 다 설치됨
+    mysql 같은 경우는 모듈을 설치해야 할 경로를 직접 잡아줘야 함 알아서 찾아보기
+
+2. 서버 실행하기 전 .env 파일에서 BASE_URL 경로 확인하고, server.js 파일에서 CORS 옵션 경로, 세션 설정
+다 확인하기
+
+3. HTTPS 인증서 발급받으려면 프론트와 마찬가지로 nodejs, certbot, nginx 설치
+    sudo dnf install nodejs -y
+    sudo dnf install certbot python3 certbot -y
+    sudo dnf install nginx -y
+
+4. 모듈 설치 후 nginx 프록시 설정 확인
+  sudo nano /etc/nginx/conf.d/api.conf 입력 후 내용 작성(첫 생성 시엔 없는게 맞음)
+  ㄴ 백엔드의 경우엔 /etc/nginx/"conf.d" 부분이 추가됨
+  
+5. 5. certbot으로 HTTPS 인증서 받기 전
+server {
+  listen 80;
+  server_name 내 백엔드DNS;
+
+  location / {
+    root /usr/share/nginx/html;   # 임시 설정, 인증만 받기 위한 기본 응답
+    index index.html;
+  }
+}
+
+6. sudo certbot --nginx -d 백엔드DNS(도메인)
+  처음 질문은 이메일에 알림 받을거냐 이메일 적어도 되고 귀찮으면 PASS~
+  두번째 질문은 Y (약관 동의)
+  세 번째 질문 3줄 정도 되는건 광고 받을거냐인데 N or 그냥 엔터
+  
+  Successfully received certificate. 라는 문구가 나오면 인증키 받은것
+
+7. 인증키 발급 후 nginx 설정
+server {
+    listen 80;
+    server_name api.test-easyfind.p-e.kr;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name api.test-easyfind.p-e.kr;
+
+    ssl_certificate /etc/letsencrypt/live/api.test-easyfind.p-e.kr/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.test-easyfind.p-e.kr/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass http://localhost:3000;  # 백엔드 포트에 따라 조정
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # 기존 업그레이드 관련 헤더 유지
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+
+        # ✅ 쿠키 전달을 위한 핵심 설정 추가
+        proxy_pass_header Set-Cookie;
+    }
+}
+
+세션 쿠키를 위해선 맨 아랫줄이 핵심
+
+8. nginx 프록시 설정 후
+sudo nginx -t -> Sucessfull 뜨면 sudo systemctl reload nginx
+
+9. 그 후 서버 실행

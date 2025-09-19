@@ -1,0 +1,188 @@
+/* components/Header.css */
+
+.header {
+  background-color: #121212;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.search-box {
+  display: flex;
+  background-color: #222;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  color: white;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+.search-button {
+  background-color: #0052cc;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.nav-menu {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e1e1e1;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.nav-menu ul {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  justify-content: center;
+}
+
+.nav-menu li {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.nav-menu li.active {
+  background-color: #0077a3;
+  color: white;
+  font-weight: bold;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-greeting {
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-badge {
+  background: #dc3545;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.mypage-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.mypage-btn:hover {
+  background-color: #218838;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.login-btn,
+.register-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+}
+
+.register-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.register-btn:hover {
+  background-color: #218838;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .user-greeting {
+    font-size: 12px;
+  }
+  
+  .user-menu {
+    gap: 8px;
+  }
+  
+  .mypage-btn,
+  .logout-btn,
+  .login-btn,
+  .register-btn {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}
