@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MyPageSidebar.css';
 
-const MyPageSidebar = ({ user, onPasswordChange, onLogout, onWithdraw, recentOrders, ordersLoading }) => {
+const MyPageSidebar = ({ user, onPasswordChange, onLogout, onWithdraw, recentOrders, ordersLoading, myEbookCount = 0 }) => {
   const navigate = useNavigate();
 
 
@@ -10,6 +10,7 @@ const MyPageSidebar = ({ user, onPasswordChange, onLogout, onWithdraw, recentOrd
     { name: '도서 목록', path: '/book', icon: '📚' },
     { name: '장바구니', path: '/cart', icon: '🛒' },
     { name: '주문 내역', path: '/reservation', icon: '📦' },
+    { name: '전자책', path: '/ebooks?mine=1', icon: '📘' },
     { name: '고객센터', path: '/inquiry', icon: '💬' }
   ];
 

@@ -1,0 +1,112 @@
+.cw-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e90ff, #007bff);
+  color: #fff;
+  border: none;
+  font-size: 28px;
+  line-height: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 10000;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cw-fab.open { transform: rotate(180deg); }
+.cw-fab:hover { box-shadow: 0 6px 14px rgba(0,0,0,0.25); }
+
+.cw-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 90px;
+  width: 340px;
+  height: 440px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10000;
+}
+
+.cw-animate-in { animation: cwFadeUp 180ms ease; }
+@keyframes cwFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cw-header {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, #f8fbff, #ffffff);
+}
+
+.cw-title { display: flex; align-items: center; gap: 8px; }
+.cw-avatar { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; }
+
+.cw-close {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.cw-suggestions { padding: 8px 10px; display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid #f1f1f1; }
+.cw-chip { background: #f1f6ff; color: #0b60d0; border: 1px solid #d8e6ff; border-radius: 16px; padding: 6px 10px; font-size: 12px; }
+
+.cw-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  background: #fafbfc;
+}
+
+.cw-row { display: flex; margin-bottom: 8px; }
+.cw-row.user { justify-content: flex-end; }
+.cw-row.bot { justify-content: flex-start; }
+
+.cw-bubble {
+  background: #ffffff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #ececec;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+}
+
+.cw-row.user .cw-bubble { background: #dff0ff; border-color: #cfe6ff; }
+
+.cw-status { color: #666; font-size: 12px; }
+
+.cw-input {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+
+.cw-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.cw-input button {
+  padding: 8px 12px;
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+
+

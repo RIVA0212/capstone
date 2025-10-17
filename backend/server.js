@@ -12,6 +12,19 @@ const path = require('path');
 const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+// fetch 폴리필 (Node < 18 지원)
+const doFetch = async (...args) => {
+  if (typeof fetch !== 'undefined') return fetch(...args);
+  const { default: nf } = await import('node-fetch');
+  return nf(...args);
+};
+
+// ===== 로깅 유틸 =====
+const ts = () => new Date().toISOString();
+const logInfo = (...a) => console.log(`[${ts()}] ℹ️`, ...a);
+const logWarn = (...a) => console.warn(`[${ts()}] ⚠️`, ...a);
+const logErr = (...a) => console.error(`[${ts()}] ❌`, ...a);
+
 const app = express();
 
 // CORS 설정
@@ -25,6 +38,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.set('trust proxy', 1);  // nginx 뒤에 있다는 걸 명시
+
+// 더미 전자책 PDF 프록시(리다이렉트) - 로컬 경로로 접근하면 외부 더미 PDF로 리다이렉트
+app.get('/ebooks/dummy.pdf', (req, res) => {
+  res.redirect('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+});
 
 // 세션 설정
 app.use(session({
@@ -1350,6 +1368,235 @@ app.put('/api/products/:productId', authenticateToken, requireAdmin, async (req,
   } catch (err) {
     console.error('재고 및 가격 수정 실패:', err);
     res.status(500).json({ success: false });
+  }
+});
+
+// =============================
+// 전자책(EBook) APIs
+// =============================
+
+// 전자책 목록 조회 (공개, 활성 상품만)
+app.get('/api/ebooks', async (req, res) => {
+  try {
+    const db = await initDB();
+    const [rows] = await db.query(`
+      SELECT p.product_id, p.product_name, p.price, p.image_url,
+             e.title, e.file_format
+      FROM product p
+      JOIN ebook e ON p.product_id = e.product_id
+      WHERE p.product_type = '전자책' AND p.is_active = 'true'
+      ORDER BY p.created_at DESC
+    `);
+    await db.end();
+    res.json({ success: true, ebooks: rows });
+  } catch (err) {
+    console.error('전자책 목록 조회 오류:', err);
+    res.status(500).json({ success: false, error: '서버 오류' });
+  }
+});
+
+// 내 전자책 라이브러리 (구매 완료된 전자책)
+app.get('/api/my-ebooks', authenticateToken, async (req, res) => {
+  const userId = req.user.user_id;
+  try {
+    const db = await initDB();
+    const [rows] = await db.query(`
+      SELECT 
+        p.product_id,
+        p.product_name,
+        p.image_url,
+        e.title,
+        e.file_format,
+        MAX(o.order_date) AS last_order_date
+      FROM orders o
+      JOIN order_items oi ON o.order_id = oi.order_id
+      JOIN product p ON oi.product_id = p.product_id
+      JOIN ebook e ON p.product_id = e.product_id
+      WHERE o.user_id = ? 
+        AND o.status = '완료' 
+        AND p.product_type = '전자책'
+      GROUP BY p.product_id, p.product_name, p.image_url, e.title, e.file_format
+      ORDER BY last_order_date DESC
+    `, [userId]);
+    await db.end();
+    res.json({ success: true, ebooks: rows });
+  } catch (err) {
+    console.error('내 전자책 조회 오류:', err);
+    res.status(500).json({ success: false, error: '서버 오류' });
+  }
+});
+
+// 전자책 콘텐츠 접근 (구매자만 접근 가능)
+app.get('/api/ebooks/:productId/access', authenticateToken, async (req, res) => {
+  const userId = req.user.user_id;
+  const { productId } = req.params;
+  try {
+    const db = await initDB();
+    
+    // 디버깅을 위한 로그
+    console.log(`전자책 접근 시도 - userId: ${userId}, productId: ${productId}`);
+    console.log('JWT 토큰에서 추출한 사용자 정보:', req.user);
+    
+    // 구매 여부 확인
+    const [owns] = await db.query(`
+      SELECT o.order_id, o.status, oi.product_id
+      FROM orders o
+      JOIN order_items oi ON o.order_id = oi.order_id
+      WHERE o.user_id = ? AND oi.product_id = ?
+    `, [userId, productId]);
+
+    console.log('구매 확인 결과:', owns);
+
+    if (owns.length === 0) {
+      console.log('구매 확인 실패 - 구매 기록 없음');
+      await db.end();
+      return res.status(403).json({ 
+        success: false, 
+        error: `구매한 전자책이 아닙니다. (userId: ${userId}, productId: ${productId})` 
+      });
+    }
+
+    // 주문 상태 확인
+    const completedOrder = owns.find(order => order.status === '완료');
+    if (!completedOrder) {
+      console.log('구매 확인 실패 - 주문 미완료:', owns);
+      await db.end();
+      return res.status(403).json({ 
+        success: false, 
+        error: `주문이 완료되지 않았습니다. (상태: ${owns[0].status})` 
+      });
+    }
+
+    console.log('주문 확인 완료, 콘텐츠 URL 조회 중...');
+    const [rows] = await db.query(
+      `SELECT e.content_url, e.file_format FROM ebook e WHERE e.product_id = ? LIMIT 1`,
+      [productId]
+    );
+    console.log('콘텐츠 조회 결과:', rows);
+    await db.end();
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, error: '콘텐츠를 찾을 수 없습니다.' });
+    }
+
+    console.log('전자책 접근 성공:', { productId, content_url: rows[0].content_url, file_format: rows[0].file_format });
+    // 단순 URL 반환 (향후 서명 URL/프록시 전환 가능)
+    const responseData = { 
+      success: true, 
+      content_url: rows[0].content_url, 
+      file_format: rows[0].file_format 
+    };
+    console.log('응답 데이터:', responseData);
+    
+    // 응답 헤더 명시적 설정
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    res.status(200).json(responseData);
+  } catch (err) {
+    console.error('전자책 접근 오류:', err);
+    res.status(500).json({ success: false, error: '서버 오류' });
+  }
+});
+
+// =============================
+// 챗봇 API
+// =============================
+app.post('/api/chatbot/message', async (req, res) => {
+  const { message } = req.body || {};
+  if (!message || !String(message).trim()) {
+    return res.status(400).json({ success: false, error: '메시지를 입력하세요.' });
+  }
+
+  try {
+    const provider = (process.env.CHAT_PROVIDER || '').toLowerCase();
+    let reply = '';
+    let suggestions = [];
+    logInfo('chatbot', { provider, msgLen: String(message).length });
+
+
+    // 1-b) Google Gemini 사용 시: CHAT_PROVIDER=gemini, GEMINI_API_KEY
+    if (!reply && provider === 'gemini') {
+      try {
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+          console.warn('GEMINI_API_KEY 미설정');
+        } else {
+          // 일부 환경에서 모델 가용성이 달라 404가 날 수 있으므로 여러 모델을 순차 시도
+          const models = [
+            process.env.GEMINI_MODEL,
+            'gemini-1.5-flash',
+            'gemini-1.5-flash-001',
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-pro',
+            'gemini-1.5-pro-001',
+            'gemini-1.5-pro-latest'
+          ].filter(Boolean);
+
+          const prompt = `캠퍼스 서점/전자책/주문/수령 안내용 챗봇으로서 간단하고 친절하게 한국어로 답하세요.\n질문: ${String(message)}`;
+          const body = { contents: [{ role: 'user', parts: [{ text: prompt }] }] };
+
+          for (const m of models) {
+            const endpoint = `https://generativelanguage.googleapis.com/v1/models/${encodeURIComponent(m)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+            logInfo('gemini:request', m);
+            try {
+              const r = await doFetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+              });
+              if (r.ok) {
+                const data = await r.json();
+                const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('') || '';
+                if (text) { reply = text; break; }
+              } else {
+                const errTxt = await r.text();
+                if (r.status === 404) {
+                  logWarn('gemini:404', m);
+                  continue;
+                }
+                logWarn('gemini:error', { status: r.status, model: m, body: errTxt.slice(0, 200) });
+              }
+            } catch (inner) {
+              logWarn('gemini:fail', { model: m, error: inner.message });
+            }
+          }
+        }
+      } catch (e) {
+        logWarn('gemini:outer-fail', e.message);
+      }
+    }
+
+    // 2) 폴백: 간단 규칙 + FAQ 기반
+    if (!reply) {
+      const normalized = String(message).toLowerCase();
+      if (normalized.includes('환불') || normalized.includes('반품')) {
+        reply = '환불/반품은 수령 전에는 가능하며, 수령 후에는 지원되지 않습니다.';
+      } else if (normalized.includes('전자책') || normalized.includes('ebook')) {
+        reply = '전자책은 구매 완료 후 마이페이지의 내 전자책에서 열람하실 수 있어요.';
+      } else if (normalized.includes('배송') || normalized.includes('수령')) {
+        reply = '주문 후 결제 완료 시 수령 대기 상태가 되며, 수령 시 영수증 상태가 업데이트됩니다.';
+      }
+
+      const db = await initDB();
+      const [faq] = await db.query(
+        `SELECT question, answer FROM questions WHERE answer IS NOT NULL AND answer <> '' ORDER BY question_id DESC LIMIT 3`
+      );
+      await db.end();
+      suggestions = faq.map(f => ({ q: f.question, a: f.answer }));
+
+      if (!reply) {
+        reply = faq.length > 0 ? `도움이 될 수 있는 최근 답변: ${faq[0].answer}` : '질문을 이해하지 못했어요. 더 구체적으로 말씀해 주세요.';
+      }
+    }
+
+    res.json({ success: true, reply, suggestions });
+  } catch (err) {
+    logErr('chatbot:exception', err && (err.stack || err.message || err));
+    // 폴백 응답으로 200 반환 (프런트에 친절한 메시지)
+    return res.json({ success: true, reply: '잠시 통신 오류가 있었어요. 다시 한번 시도해 주세요.', suggestions: [] });
   }
 });
 

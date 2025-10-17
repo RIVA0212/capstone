@@ -11,13 +11,16 @@ import InquiryPage from './components/InquiryPage';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import MyPage from './components/MyPage';
+import EBookLibrary from './components/EBookLibrary';
+import EBookReader from './components/EBookReader';
+import ChatWidget from './components/ChatWidget';
 
 // 모바일 렌더링 (현재는 BookPage만 존재)
-import M_BookPage from './components/M_BookPage';
-import M_CartPage from './components/M_CartPage';
-import M_OrderDetails from './components/M_OrderDetails';
-import M_ReservationPage from './components/M_ReservationPage';
-import M_InquiryPage from './components/M_InquiryPage';
+import MBookPage from './components/M_BookPage';
+import MCartPage from './components/M_CartPage';
+import MOrderDetails from './components/M_OrderDetails';
+import MReservationPage from './components/M_ReservationPage';
+import MInquiryPage from './components/M_InquiryPage';
 
 
 function App() {
@@ -37,12 +40,15 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/book" element={isMobile ? <M_BookPage /> : <BookPage />} />
-          <Route path="/cart" element={isMobile ? <M_CartPage /> : <CartPage />} />
-          <Route path="/order-details/:orderId" element={isMobile ? <M_OrderDetails /> : <OrderDetails />} />
-          <Route path="/reservation" element={isMobile ? <M_ReservationPage /> : <ReservationPage />} />
-          <Route path="/inquiry" element={isMobile ? <M_InquiryPage /> : <InquiryPage />} />
+          <Route path="/book" element={isMobile ? <MBookPage /> : <BookPage />} />
+          <Route path="/cart" element={isMobile ? <MCartPage /> : <CartPage />} />
+          <Route path="/order-details/:orderId" element={isMobile ? <MOrderDetails /> : <OrderDetails />} />
+          <Route path="/reservation" element={isMobile ? <MReservationPage /> : <ReservationPage />} />
+          <Route path="/inquiry" element={isMobile ? <MInquiryPage /> : <InquiryPage />} />
+          <Route path="/ebooks" element={<EBookLibrary />} />
+          <Route path="/ebooks/:productId" element={<EBookReader />} />
         </Routes>
+        <ChatWidget />
       </div>
     </Router>
   );

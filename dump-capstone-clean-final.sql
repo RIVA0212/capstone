@@ -1,8 +1,4 @@
--- ========================================
--- 캡스톤 프로젝트 데이터베이스 스키마
--- ========================================
 
--- 데이터베이스 생성
 DROP DATABASE IF EXISTS `capstone`;
 CREATE DATABASE `capstone` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `capstone`;
@@ -35,7 +31,7 @@ CREATE TABLE `product` (
   `product_name` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `image_url` varchar(255) DEFAULT NULL,
-  `product_type` enum('책','문구류') NOT NULL,
+  `product_type` enum('책','문구류','전자책') NOT NULL,
   `stock_quantity` int NOT NULL DEFAULT '0',
   `is_active` enum('true','false') NOT NULL DEFAULT 'true',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -59,6 +55,48 @@ CREATE TABLE `book` (
   CONSTRAINT `book_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 INSERT INTO `book` VALUES (1,1,'임헌찬 외 2인','북두출판사','전자공학과',2024),(2,2,'한학근','문운당','전자공학과',2016),(3,3,'한학근','동일출판사','전자공학과',2018),(4,4,'김경희 외 1인','한빛아카데미','정보통신과',2021),(5,5,'김수원 외 7인','홍릉과학출판사','정보통신과',2017),(6,6,'이종원','한빛아카데미','정보통신과',2017),(7,7,'검정연구회','동일출판사','전기과',2024),(8,8,'손혜영','인피니티북스','전기과',2016),(9,9,'천인국','생능출판사','전기과',2023),(10,10,'하정우','북두출판사','전자공학과',2024),(11,11,'오종오, 김승겸','북두출판사','전자공학과',2015),(12,12,'임석구, 홍경호','한빛아카데미','전자공학과',2022),(13,13,'김종현','생능출판','정보통신과',2024),(14,14,'우재남','한빛아카데미','정보통신과',2022),(15,15,'이해선','북두출판사','정보통신과',2023),(16,16,'이충식 외 4명','동일출판사','전기과',2010),(17,17,'검정연구회','동일출판사','전기과',2025),(18,18,'김세동 외 3명','동일출판사','전기과',2025),(19,19,'권순석 외','현문사','치기공과',2025),(20,20,'김기백 외','지성출판사','치기공과',2018),(21,21,'관교의치기공학교육연구회','대학서림','치기공과',2022),(22,22,'총의치기공학연구회','고문사','치기공과',2024),(23,29,'오종오','사이버북스','전자공학과',2015),(24,30,'김종오 외 3명','북두출판사','정보통신과',2019),(25,31,'홍순관','한빛아카데미','정보통신과',2016),(26,32,'김정섭 외 2명','한빛아카데미','정보통신과',2021),(27,33,'고응남','한빛아카데미','정보통신과',2020),(28,34,'장문철','앤써북','정보통신과',2024),(29,35,'신동진','피안피북','정보통신과',2024),(30,36,'김동명','한빛아카데미','전기과',2020),(31,37,'임석구, 홍경호','한빛아카데미','전기과',2016),(32,38,'고재원 외 2명','동일출판사','전기과',2014),(33,39,'최승덕','북두출판사','전기과',2023),(34,40,'장현오','인피니티북스','전기과',2014),(35,41,'검정연구회','동일출판사','전기과',2025),(36,42,'김상원 외 2명','일진사','전기과',2019),(37,43,'권순석, 권은자','지성출판사','치기공과',2022),(38,44,'치기공재료학연구회','고문사','치기공과',2024),(39,45,'국소의치기공학연구회','지성출판사','치기공과',2022),(40,46,'충의치기공학교수철의회','대학서림','치기공과',2021),(41,47,'천안국','생능출판사','전자공학과',2023),(42,48,'우재남, 최민아','한빛아카데미','컴퓨터소프트웨어과',2021),(43,49,'민지영, 문수민 외','길벗','컴퓨터소프트웨어과',2025),(44,50,'강환수 외','인피니티북스','컴퓨터소프트웨어과',2022),(45,51,'황기태','생능출판사','컴퓨터소프트웨어과',2022),(46,52,'천정아','연두에디션','컴퓨터소프트웨어과',2022),(47,53,'오세종','한빛아카데미','컴퓨터소프트웨어과',2025),(48,54,'송미영','한빛아카데미','컴퓨터소프트웨어과',2023),(49,55,'황기태, 김효수','생능출판사','컴퓨터소프트웨어과',2018),(50,56,'최영규, 천인국','생능출판사','컴퓨터소프트웨어과',2024),(51,57,'박우창, 남송휘','한빛아카데미','컴퓨터소프트웨어과',2021),(52,58,'이종원','한빛아카데미','컴퓨터소프트웨어과',2022),(53,59,'장용식 외','인피니티북스','컴퓨터소프트웨어과',2019),(54,60,'허원실','한빛아카데미','컴퓨터소프트웨어과',2015),(55,61,'이고잉','위키북스','컴퓨터소프트웨어과',2023),(56,62,'최성철','한빛아카데미','컴퓨터소프트웨어과',2022),(57,63,'송미영','길벗캠퍼스','컴퓨터소프트웨어과',2024),(58,64,'히로시 유키 외 3명','인피니티북스','컴퓨터소프트웨어과',2017),(59,65,'길벗알앤디','길벗','컴퓨터소프트웨어과',2023),(60,66,'오일석','한빛아카데미','컴퓨터소프트웨어과',2023);
+
+-- ========================================
+-- 전자책 테이블
+-- ========================================
+CREATE TABLE `ebook` (
+  `ebook_id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `content_url` varchar(500) NOT NULL,
+  `file_format` varchar(20) DEFAULT 'pdf',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ebook_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `ebook_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ========================================
+-- 전자책 더미 데이터
+-- ========================================
+-- 샘플 PDF: W3C 제공 더미 파일 사용
+-- https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+
+-- EBook #1
+INSERT INTO `product` (`product_name`,`price`,`image_url`,`product_type`,`stock_quantity`,`is_active`)
+VALUES ('리액트 핸드북 (전자책)', 12000.00, '/images/48.jpg', '전자책', 9999, 'true');
+SET @ebook_p1 = LAST_INSERT_ID();
+INSERT INTO `ebook` (`product_id`,`title`,`content_url`,`file_format`)
+VALUES (@ebook_p1, '리액트 핸드북', '/ebooks/sample.pdf', 'pdf');
+
+-- EBook #2
+INSERT INTO `product` (`product_name`,`price`,`image_url`,`product_type`,`stock_quantity`,`is_active`)
+VALUES ('파이썬 빠른 시작 (전자책)', 9000.00, '/images/53.jpg', '전자책', 9999, 'true');
+SET @ebook_p2 = LAST_INSERT_ID();
+INSERT INTO `ebook` (`product_id`,`title`,`content_url`,`file_format`)
+VALUES (@ebook_p2, '파이썬 빠른 시작', '/ebooks/sample.pdf', 'pdf');
+
+-- EBook #3
+INSERT INTO `product` (`product_name`,`price`,`image_url`,`product_type`,`stock_quantity`,`is_active`)
+VALUES ('웹 프로그래밍 기초 (전자책)', 10000.00, '/images/51.jpg', '전자책', 9999, 'true');
+SET @ebook_p3 = LAST_INSERT_ID();
+INSERT INTO `ebook` (`product_id`,`title`,`content_url`,`file_format`)
+VALUES (@ebook_p3, '웹 프로그래밍 기초', '/ebooks/sample.pdf', 'pdf');
 
 -- ========================================
 -- 주문 테이블
@@ -120,3 +158,16 @@ CREATE TABLE `receipts` (
   KEY `order_id` (`order_id`),
   CONSTRAINT `receipts_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ========================================
+-- 테스트용 주문 데이터 (전자책 구매)
+-- ========================================
+INSERT INTO `orders` (`user_id`, `status`, `total_amount`, `order_date`) VALUES 
+(1, '완료', 12000.00, '2025-01-15 10:00:00'),
+(1, '완료', 9000.00, '2025-01-15 11:00:00'),
+(2, '완료', 10000.00, '2025-01-16 10:00:00');
+
+INSERT INTO `order_items` (`order_id`, `product_id`, `quantity`, `price_per_item`) VALUES 
+(1, 67, 1, 12000.00),  -- 관리자가 리액트 핸드북 구매
+(2, 68, 1, 9000.00),   -- 관리자가 파이썬 빠른 시작 구매
+(3, 69, 1, 10000.00);  -- 사용자2가 웹 프로그래밍 기초 구매

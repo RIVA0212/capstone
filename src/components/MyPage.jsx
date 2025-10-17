@@ -31,6 +31,7 @@ const MyPage = () => {
     completedOrders: 0,
     totalAmount: 0
   });
+  const [myEbookCount, setMyEbookCount] = useState(0);
   const [statsLoading, setStatsLoading] = useState(false);
   const [recentActivities, setRecentActivities] = useState([]);
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const MyPage = () => {
     fetchRecentOrders();
     fetchOrderStats();
     fetchRecentActivity();
+    fetchMyEbooksCount();
   }, []);
 
   const fetchUserInfo = async () => {
@@ -226,6 +228,19 @@ const MyPage = () => {
     }
   };
 
+  const fetchMyEbooksCount = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE}/api/my-ebooks`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data?.success) setMyEbookCount((res.data.ebooks || []).length);
+    } catch (err) {
+      console.error('내 전자책 조회 실패:', err);
+    }
+  };
+
   const fetchRecentActivity = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -312,6 +327,7 @@ const MyPage = () => {
           onWithdraw={() => setShowWithdrawModal(true)}
           recentOrders={recentOrders}
           ordersLoading={ordersLoading}
+          myEbookCount={myEbookCount}
         />
         
         {/* 메인 콘텐츠 */}

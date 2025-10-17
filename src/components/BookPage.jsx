@@ -238,6 +238,17 @@ const handleSearch = async () => {
                   {category.name}
                 </li>
               ))}
+              <li
+                className={`category-item ${activeProductType === '전자책' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveProductType('전자책');
+                  setActiveCategory('all');
+                  setCurrentPage(1);
+                  setIsSearching(false);
+                }}
+              >
+                전자책
+              </li>
             </ul>
           </div>
 
