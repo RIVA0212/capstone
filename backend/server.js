@@ -300,7 +300,7 @@ app.get('/api/recommended-books', async (req, res) => {
     
     const [results] = await db.query(`
       SELECT p.product_id, p.product_name, p.price, p.image_url,
-             b.author, b.publisher, b.category
+             b.author, b.publisher, b.category, b.grade, b.semester
       FROM product p
       LEFT JOIN book b ON p.product_id = b.product_id
       WHERE p.product_type = '책' AND p.is_active = 'true'
@@ -315,6 +315,50 @@ app.get('/api/recommended-books', async (req, res) => {
     res.status(500).json({ error: '서버 오류' });
   }
 });
+
+// 학년/학기별 도서 조회
+app.get('/api/books-by-grade-semester', async (req, res) => {
+  const category = req.query.category; // 학과
+  const grade = req.query.grade ? parseInt(req.query.grade) : null;
+  const semester = req.query.semester ? parseInt(req.query.semester) : null;
+  
+  try {
+    const db = await initDB();
+    
+    let whereClause = `p.product_type = '책' AND p.is_active = 'true'`;
+    const params = [];
+    
+    if (category && category !== 'all') {
+      whereClause += ` AND b.category = ?`;
+      params.push(category);
+    }
+    
+    if (grade) {
+      whereClause += ` AND b.grade = ?`;
+      params.push(grade);
+    }
+    
+    if (semester) {
+      whereClause += ` AND b.semester = ?`;
+      params.push(semester);
+    }
+    
+    const [results] = await db.query(`
+      SELECT p.product_id, p.product_name, p.price, p.image_url,
+             b.author, b.publisher, b.category, b.grade, b.semester, b.published_year
+      FROM product p
+      JOIN book b ON p.product_id = b.product_id
+      WHERE ${whereClause}
+      ORDER BY b.grade, b.semester, p.product_name
+    `, params);
+    
+    res.json({ success: true, books: results });
+    await db.end();
+  } catch (error) {
+    console.error('학년/학기별 도서 조회 오류:', error);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
 // 상품 데이터 조회
 app.get('/api/data', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -325,6 +369,10 @@ app.get('/api/data', async (req, res) => {
   const sort = req.query.sort || '최신순';
   const productType = req.query.product_type || '책';
   const isAdmin = String(req.query.admin).toLowerCase() === 'true';
+  
+  // ✅ 학년/학기 필터 추가
+  const grade = req.query.grade ? parseInt(req.query.grade) : null;
+  const semester = req.query.semester ? parseInt(req.query.semester) : null;
 
   let whereClause = '1=1';
   const params = [];
@@ -350,6 +398,18 @@ app.get('/api/data', async (req, res) => {
       whereClause += ` AND b.category = ?`;
       params.push(category);
     }
+    
+    // ✅ 학년 필터 적용
+    if (grade) {
+      whereClause += ` AND b.grade = ?`;
+      params.push(grade);
+    }
+    
+    // ✅ 학기 필터 적용
+    if (semester) {
+      whereClause += ` AND b.semester = ?`;
+      params.push(semester);
+    }
   }
 
   // ✅ 정렬
@@ -361,7 +421,7 @@ app.get('/api/data', async (req, res) => {
     const db = await initDB();
 
     const query = `
-      SELECT p.*, b.author, b.publisher, b.category
+      SELECT p.*, b.author, b.publisher, b.category, b.grade, b.semester
       FROM product p
       LEFT JOIN book b ON p.product_id = b.product_id
       WHERE ${whereClause}
@@ -695,7 +755,7 @@ app.get('/api/search', async (req, res) => {
     const dataQuery = `
       SELECT 
         p.product_id, p.product_name, p.price, p.image_url, p.product_type, p.stock_quantity, p.is_active,
-        b.author, b.publisher, b.category
+        b.author, b.publisher, b.category, b.grade, b.semester
       FROM product p
       LEFT JOIN book b ON p.product_id = b.product_id
       WHERE ${whereClause}

@@ -17,6 +17,13 @@ const BookPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [activeProductType, setActiveProductType] = useState('책');
+  
+  // ✅ 학년/학기 필터링 상태
+  const [selectedGrade, setSelectedGrade] = useState(null);
+  const [selectedSemester, setSelectedSemester] = useState(null);
+  const [expandedCategory, setExpandedCategory] = useState(null); // 학년 표시용
+  const [expandedGrade, setExpandedGrade] = useState(null); // 학기 표시용
+  
   //여기서부턴 어드민 세션 전용
   const [isAdmin, setIsAdmin] = useState(false);
   
@@ -42,7 +49,7 @@ const BookPage = () => {
       fetchBooks();
     }
     fetchCategories();
-  }, [currentPage, sortOrder, activeCategory, activeProductType, isSearching]);
+  }, [currentPage, sortOrder, activeCategory, activeProductType, isSearching, selectedGrade, selectedSemester]);
 
   // 검색 중일 때 페이지 변경 감지용
   useEffect(() => {
@@ -62,16 +69,39 @@ const BookPage = () => {
   const fetchBooks = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `${process.env.REACT_APP_API_BASE}/api/data?page=${currentPage}&sort=${sortOrder}&category=${activeCategory}&product_type=${activeProductType}&admin=${isAdmin.toString()}`
-      );
+      
+      // ✅ 학년/학기 파라미터 추가
+      let url = `${process.env.REACT_APP_API_BASE}/api/data?page=${currentPage}&sort=${sortOrder}&category=${activeCategory}&product_type=${activeProductType}&admin=${isAdmin.toString()}`;
+      
+      if (selectedGrade) {
+        url += `&grade=${selectedGrade}`;
+      }
+      if (selectedSemester) {
+        url += `&semester=${selectedSemester}`;
+      }
+      
+      const response = await fetch(url);
+      
+      // 응답 상태 확인
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      // 응답 타입 확인
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("JSON이 아닌 응답:", text);
+        throw new Error("서버에서 JSON이 아닌 응답을 받았습니다");
+      }
+      
       const result = await response.json();
       setBooks(result.data);
       const totalCount = result.pagination?.total || 0;
       setTotalPages(Math.max(1, Math.ceil(totalCount / 9)));
     } catch (err) {
-      console.error('도서 데이터 로딩 실패:', err);
-      setError('서버와의 연결에 문제가 발생했습니다.');
+      console.error("도서 데이터 로딩 실패:", err);
+      setError("서버와의 연결에 문제가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -225,17 +255,97 @@ const handleSearch = async () => {
             <h3>도서</h3>
             <ul className="category-list">
               {categories.map((category) => (
-                <li
-                  key={category.id}
-                  className={`category-item ${activeProductType === '책' && activeCategory === category.id ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveProductType('책');
-                    setActiveCategory(category.id);
-                    setCurrentPage(1);
-                    setIsSearching(false);
-                  }}
-                >
-                  {category.name}
+                <li key={category.id}>
+                  <div
+                    className={`category-item ${activeProductType === '책' && activeCategory === category.id && !selectedGrade ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveProductType('책');
+                      setActiveCategory(category.id);
+                      setCurrentPage(1);
+                      setIsSearching(false);
+                      
+                      // ✅ 전체인 경우 학년/학기 초기화
+                      if (category.id === 'all') {
+                        setSelectedGrade(null);
+                        setSelectedSemester(null);
+                        setExpandedCategory(null);
+                        setExpandedGrade(null);
+                      } else {
+                        // ✅ 학과 클릭 시 학년 토글
+                        if (expandedCategory === category.id) {
+                          setExpandedCategory(null);
+                          setSelectedGrade(null);
+                          setSelectedSemester(null);
+                          setExpandedGrade(null);
+                        } else {
+                          setExpandedCategory(category.id);
+                          setSelectedGrade(null);
+                          setSelectedSemester(null);
+                          setExpandedGrade(null);
+                        }
+                      }
+                    }}
+                  >
+                    {category.name}
+                    {category.id !== 'all' && (
+                      <span style={{ float: 'right' }}>
+                        {expandedCategory === category.id ? '▼' : '▶'}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* ✅ 학년 목록 */}
+                  {expandedCategory === category.id && category.id !== 'all' && (
+                    <ul style={{ paddingLeft: '20px', marginTop: '5px' }}>
+                      {[1, 2, 3, 4].map((grade) => (
+                        <li key={grade}>
+                          <div
+                            className={`category-item ${selectedGrade === grade && !selectedSemester ? 'active' : ''}`}
+                            style={{ fontSize: '14px' }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedGrade(grade);
+                              setCurrentPage(1);
+                              
+                              // ✅ 학년 클릭 시 학기 토글
+                              if (expandedGrade === grade) {
+                                setExpandedGrade(null);
+                                setSelectedSemester(null);
+                              } else {
+                                setExpandedGrade(grade);
+                                setSelectedSemester(null);
+                              }
+                            }}
+                          >
+                            {grade}학년
+                            <span style={{ float: 'right' }}>
+                              {expandedGrade === grade ? '▼' : '▶'}
+                            </span>
+                          </div>
+                          
+                          {/* ✅ 학기 목록 */}
+                          {expandedGrade === grade && (
+                            <ul style={{ paddingLeft: '20px', marginTop: '5px' }}>
+                              {[1, 2].map((semester) => (
+                                <li
+                                  key={semester}
+                                  className={`category-item ${selectedSemester === semester ? 'active' : ''}`}
+                                  style={{ fontSize: '13px' }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedSemester(semester);
+                                    setCurrentPage(1);
+                                  }}
+                                >
+                                  {semester}학기
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
               <li
@@ -262,6 +372,11 @@ const handleSearch = async () => {
                   setActiveCategory('all');
                   setCurrentPage(1);
                   setIsSearching(false);
+                  // ✅ 학년/학기 초기화
+                  setSelectedGrade(null);
+                  setSelectedSemester(null);
+                  setExpandedCategory(null);
+                  setExpandedGrade(null);
                 }}
               >
                 문구류
@@ -280,6 +395,11 @@ const handleSearch = async () => {
                     setActiveCategory('lowstock');
                     setCurrentPage(1);
                     setIsSearching(false);
+                    // ✅ 학년/학기 초기화
+                    setSelectedGrade(null);
+                    setSelectedSemester(null);
+                    setExpandedCategory(null);
+                    setExpandedGrade(null);
                   }}
                 >
                   재고 5개 이하
@@ -299,6 +419,11 @@ const handleSearch = async () => {
                     setActiveCategory('outofstock');
                     setCurrentPage(1);
                     setIsSearching(false);
+                    // ✅ 학년/학기 초기화
+                    setSelectedGrade(null);
+                    setSelectedSemester(null);
+                    setExpandedCategory(null);
+                    setExpandedGrade(null);
                   }}
                 >
                   재고 소진 상품
@@ -351,6 +476,11 @@ const handleSearch = async () => {
               <>
                 <p className="book-author">저자: {book.author}</p>
                 <p className="book-publisher">출판사: {book.publisher}</p>
+                {book.grade && book.semester && (
+                  <p className="book-grade-semester" style={{ fontSize: '13px', color: '#666' }}>
+                    📚 {book.grade}학년 {book.semester}학기
+                  </p>
+                )}
               </>
             )}
 

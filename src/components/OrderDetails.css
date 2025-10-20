@@ -92,6 +92,7 @@
   grid-template-columns: 2fr 1fr;
   gap: 30px;
   padding: 30px;
+  background: white;
 }
 
 /* 주문 정보 섹션 */
@@ -99,6 +100,7 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  background: white;
 }
 
 .section-title {
